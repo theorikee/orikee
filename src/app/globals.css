@@ -1,26 +1,130 @@
 @import "tailwindcss";
 
+/*
+  Orikee design tokens — single source of truth.
+  Approved values come from docs/orikee/global-design.md.
+  Values marked TBD are temporary, conservative implementations pending a
+  design-system decision; they must not be treated as approved tokens.
+*/
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Approved brand palette */
+  --brand-primary: #b98286;
+  --brand-text: #49332d;
+  --brand-background: #faf5ef;
+  --brand-secondary: #a7a98a;
+  --brand-accent: #c69a8b;
+
+  /* Supporting UI tokens derived from the approved palette (not a competing palette) */
+  --surface: #ffffff;
+  --surface-sand: #f5efe8;
+  --surface-linen: #f1e7dd;
+  --line: rgba(73, 51, 45, 0.14);
+
+  /* Functional status colours — TBD: requires design-system decision */
+  --error: #a1362b;
+  --success: #3d6b4f;
+
+  /*
+    Type scale derived from the approved desktop/mobile endpoint sizes in
+    global-design.md §5. Fluid values interpolate between the 390px and 1440px
+    reference frames; no new sizes are introduced.
+  */
+  --fs-hero: clamp(2.5rem, 1.9429rem + 2.2857vw, 4rem);
+  --fs-h1: clamp(2.25rem, 1.8786rem + 1.5238vw, 3.25rem);
+  --fs-h2: clamp(1.875rem, 1.6429rem + 0.9524vw, 2.5rem);
+  --fs-h3: clamp(1.625rem, 1.5321rem + 0.381vw, 1.875rem);
+  --fs-h4: clamp(1.25rem, 1.2036rem + 0.1905vw, 1.375rem);
+  --fs-body-large: clamp(1.0625rem, 1.0393rem + 0.0952vw, 1.125rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-caption: 0.75rem;
+  --fs-button: 0.875rem;
+
+  /* Radii — TBD: requires design-system decision (restrained rectangular default) */
+  --control-radius: 0.125rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-text: var(--brand-text);
+  --color-brand-background: var(--brand-background);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-accent: var(--brand-accent);
+
+  --color-surface: var(--surface);
+  --color-surface-sand: var(--surface-sand);
+  --color-surface-linen: var(--surface-linen);
+  --color-line: var(--line);
+  --color-error: var(--error);
+  --color-success: var(--success);
+
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+
+  --text-hero: var(--fs-hero);
+  --text-hero--line-height: 1.05;
+  --text-h1: var(--fs-h1);
+  --text-h1--line-height: 1.1;
+  --text-h2: var(--fs-h2);
+  --text-h2--line-height: 1.15;
+  --text-h3: var(--fs-h3);
+  --text-h3--line-height: 1.2;
+  --text-h4: var(--fs-h4);
+  --text-h4--line-height: 1.35;
+  --text-body-large: var(--fs-body-large);
+  --text-body-large--line-height: 1.6;
+  --text-body: var(--fs-body);
+  --text-body--line-height: 1.6;
+  --text-small: var(--fs-small);
+  --text-small--line-height: 1.5;
+  --text-caption: var(--fs-caption);
+  --text-caption--line-height: 1.4;
+  --text-button: var(--fs-button);
+  --text-button--line-height: 1.2;
+
+  /* Centred content container. Breakpoints remain Tailwind defaults — TBD: requires design-system decision */
+  --container-content: 80rem;
+
+  --radius-control: var(--control-radius);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--brand-background);
+    color: var(--brand-text);
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: var(--brand-text);
+    color: var(--brand-background);
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--brand-text);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Installed-PWA layout: the tab bar occupies the bottom safe area. */
+@media (display-mode: standalone) {
+  body {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
